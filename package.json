@@ -1,0 +1,26 @@
+{
+  "name": "cst336_lab6",
+  "version": "1.0.0",
+  "description": "lab6",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ejrollo/cst336_lab6.git"
+  },
+  "author": "EJ Rollo",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ejrollo/cst336_lab6/issues"
+  },
+  "homepage": "https://github.com/ejrollo/cst336_lab6#readme",
+  "dependencies": {
+    "bcrypt": "^5.0.0",
+    "ejs": "^3.1.5",
+    "express": "^4.17.1",
+    "express-session": "^1.17.1",
+    "mysql": "^2.18.1"
+  }
+}

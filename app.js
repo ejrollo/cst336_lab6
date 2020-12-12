@@ -23,15 +23,19 @@ app.get("/", function(req, res){
 app.post("/", async function(req, res){
     let username = req.body.username;
     let password = req.body.password;
-    //console.log("username:" + username);
-    //console.log("password:" + password);
     
-    let hashedPwd = "$2a$10$06ofFgXJ9wysAOzQh0D0..RcDp1w/urY3qhO6VuUJL2c6tzAJPfj6";
+    let result = await checkUsername(username);
+    console.dir(result);
+    let hashedPwd = "";
+    
+    if (result.length > 0){
+        hashedPwd = result[0].password;
+    }
     
     let passwordMatch = await checkPassword(password, hashedPwd);
     console.log("passwordMatch: " + passwordMatch);
     
-    if (username == 'admin' && password == 'secret'){
+    if (passwordMatch){
         req.session.authenticated = true;
         res.render("welcome");
     } else{
@@ -48,12 +52,35 @@ app.get("/logout", function(req, res){
     res.redirect("/");
 });
 
+function createDBConnection(){
+    var conn = mysql.createPool({
+        connectionLimit: 10,
+        host: "ixnzh1cxch6rtdrx.cbetxkdyhwsb.us-east-1.rds.amazonaws.com",
+        user: "gj572ofpi2j0wtwv",
+        password: "xhwj9t0oc83y953d",
+        database: "z6v85vcvb5bkcdal"
+    });
+    return conn;
+}
+
 function isAuthenticated(req, res, next){
     if (!req.session.authenticated){
         res.redirect('/');
     } else{
         next();
     }
+}
+
+function checkUsername(username){
+    let sql = "SELECT * FROM users WHERE username = ?";
+    return new Promise(function(resolve, reject){
+        let conn = createDBConnection();
+        conn.query(sql, [username], function (err, rows, fields){
+            if (err) throw err;
+            console.log("Rows found: " + rows.length);
+            resolve(rows);
+        });//query
+    });//promise
 }
 
 function checkPassword(password, hashedValue){
